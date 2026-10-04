@@ -1,0 +1,71 @@
+@model Sicoob.Models.Documento
+@{
+    var anexos = ViewBag.Anexos as List<Sicoob.Models.Anexo>;
+    ViewData["Title"] = "Detalhes do Documento";
+    Layout =  "_Layout";
+}
+<div class="mt-4">
+    <h2>@Model.NumeroDocumento</h2>
+
+    @if (TempData["Mensagem"] != null)
+    {
+        <div class="alert alert-success">@TempData["Mensagem"]</div>
+    }
+
+    <dl class="row">
+        <dt class="col-sm-2">Assunto</dt>
+        <dd class="col-sm-10">@Model.Assunto</dd>
+
+        <dt class="col-sm-2">Destinatário</dt>
+        <dd class="col-sm-10">@Model.Destinatario</dd>
+
+        <dt class="col-sm-2">Setor</dt>
+        <dd class="col-sm-10">@Model.Setor</dd>
+
+        <dt class="col-sm-2">Descrição</dt>
+        <dd class="col-sm-10">@Model.Descricao</dd>
+
+        <dt class="col-sm-2">Responsável</dt>
+        <dd class="col-sm-10">@Model.Usuario?.Nome</dd>
+    </dl>
+
+    <hr />
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Anexos</h4>
+        <a asp-controller="Anexo" asp-action="Anexar" asp-route-documentoId="@Model.Id" class="btn btn-primary btn-sm">Anexar Arquivo</a>
+    </div>
+
+    @if (anexos != null && anexos.Any())
+    {
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Versão</th>
+                    <th>Arquivo</th>
+                    <th>Enviado por</th>
+                    <th>Data</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var anexo in anexos)
+                {
+                    <tr>
+                        <td>v@(anexo.Versao)</td>
+                        <td>@anexo.NomeArquivo</td>
+                        <td>@anexo.Usuario?.Nome</td>
+                        <td>@anexo.DataUpload.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td><a href="@anexo.CaminhoArquivo" target="_blank" class="btn btn-sm btn-outline-secondary">Baixar</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-muted">Nenhum anexo enviado ainda.</p>
+    }
+
+    <a asp-action="Index" class="btn btn-secondary">Voltar</a>
+</div>

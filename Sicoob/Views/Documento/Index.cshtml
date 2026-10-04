@@ -1,0 +1,147 @@
+@model List<Sicoob.Models.Documento>
+
+@{
+    ViewData["Title"] = "Documentos";
+    Layout = "_Layout";
+    
+    string? filtroTipo = ViewBag.FiltroTipo;
+}
+
+
+
+<div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+    <h2>Documentos</h2>
+    <a asp-action="Create" class="btn btn-primary">Novo Documento</a>
+</div>
+
+<form method="get" asp-action="Index" class="card card-body mb-3 bg-light">
+    <div class="row g-2">
+        <div class="col-md-3">
+            <label class="form-label">Número</label>
+            <input type="text" name="numero" class="form-control" value="@ViewBag.FiltroNumero" />
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Tipo</label>
+            <select name="tipo" class="form-select">
+                <option value="">Todos</option>
+                <option value="CA" selected="@(filtroTipo == "CA")">CA</option>
+                <option value="MI" selected="@(filtroTipo == "MI")">MI</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Assunto</label>
+            <input type="text" name="assunto" class="form-control" value="@ViewBag.FiltroAssunto" />
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Data</label>
+            <input type="date" name="data" class="form-control" value="@ViewBag.FiltroData" />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Responsável</label>
+            <input type="text" name="responsavel" class="form-control" value="@ViewBag.FiltroResponsavel" />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Destinatário</label>
+            <input type="text" name="destinatario" class="form-control" value="@ViewBag.FiltroDestinatario" />
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary me-2">Buscar</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Limpar</a>
+        </div>
+    </div>
+</form>
+
+@if (TempData["Mensagem"] != null)
+{
+    <div class="alert alert-success">@TempData["Mensagem"]</div>
+}
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Número</th>
+            <th>Tipo</th>
+            <th>Data</th>
+            <th>Assunto</th>
+            <th>Destinatário</th>
+            <th>Setor</th>
+            <th>Responsável</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var doc in Model)
+        {
+            var meuId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var podeEditar = User.IsInRole("Admin") || doc.UsuarioId.ToString() == meuId;
+
+            <tr>
+                <td>@doc.NumeroDocumento</td>
+                <td>@doc.TipoDocumento</td>
+                <td>@doc.DataDocumento.ToString("dd/MM/yyyy")</td>
+                <td>@doc.Assunto</td>
+                <td>@doc.Destinatario</td>
+                <td>@doc.Setor</td>
+                <td>@doc.Usuario?.Nome</td>
+                <td>
+                    @if (doc.Status == "Ativo")
+                    {
+                        <span class="badge bg-success">Ativo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Cancelado</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Detalhes" asp-route-id="@doc.Id" class="btn btn-sm btn-outline-secondary">Detalhes</a>
+
+                    @if (podeEditar)
+                    {
+                        <a asp-action="Edit" asp-route-id="@doc.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+
+                        @if (doc.Status == "Ativo")
+                        {
+                            <form asp-action="Cancelar" asp-route-id="@doc.Id" method="post" class="d-inline" onsubmit="return confirm('Tem certeza que deseja cancelar este documento?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Cancelar</button>
+                            </form>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Nenhum documento cadastrado ainda.</div>
+}
+
+<nav>
+    <ul class="pagination">
+        @for (int i = 1; i <= (int)ViewBag.TotalPaginas; i++)
+        {
+            <li class="page-item @(i == (int)ViewBag.PaginaAtual ? "active" : "")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-pagina="@i"
+                   asp-route-numero="@ViewBag.FiltroNumero"
+                   asp-route-tipo="@ViewBag.FiltroTipo"
+                   asp-route-assunto="@ViewBag.FiltroAssunto"
+                   asp-route-data="@ViewBag.FiltroData"
+                   asp-route-responsavel="@ViewBag.FiltroResponsavel"
+                   asp-route-destinatario="@ViewBag.FiltroDestinatario">
+                    @i
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

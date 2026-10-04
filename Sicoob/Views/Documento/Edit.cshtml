@@ -1,0 +1,51 @@
+    @model Sicoob.Models.ViewModels.DocumentosViewModel
+
+@{
+    ViewData["Title"] = "Editar Documento";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <h2>Editar Documento @ViewBag.NumeroDocumento</h2>
+
+        <form asp-action="Edit" asp-route-id="@ViewBag.DocumentoId" method="post">
+            <input type="hidden" asp-for="TipoDocumento" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="DataDocumento" class="form-label">Data</label>
+                <input asp-for="DataDocumento" type="date" class="form-control"/>
+                <span asp-validation-for="DataDocumento" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Assunto" class="form-label">Assunto</label>
+                <input asp-for="Assunto" class="form-control"/>
+                <span asp-validation-for="Assunto" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Destinatario" class="form-label">Destinatário</label>
+                <input asp-for="Destinatario" class="form-control"/>
+                <span asp-validation-for="Destinatario" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Setor" class="form-label">Setor / Departamento</label>
+                <input asp-for="Setor" class="form-control"/>
+                <span asp-validation-for="Setor" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Descricao" class="form-label">Descrição</label>
+                <textarea asp-for="Descricao" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Descricao" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </form>
+        
+    </div>
+</div>

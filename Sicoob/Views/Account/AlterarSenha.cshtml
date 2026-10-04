@@ -1,0 +1,38 @@
+@model Sicoob.Models.ViewModels.AlterarSenhaViewModel
+
+@{
+    ViewData["Title"] = "Alterar Senha";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <h2>Alterar Senha</h2>
+
+        @if (ViewBag.Mensagem != null)
+        {
+            <div class="alert alert-success">@ViewBag.Mensagem</div>
+        }
+
+        <form asp-action="AlterarSenha" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="SenhaAtual" class="form-label">Senha Atual</label>
+                <input asp-for="SenhaAtual" type="password" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="NovaSenha" class="form-label">Nova Senha</label>
+                <input asp-for="NovaSenha" type="password" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ConfirmarNovaSenha" class="form-label">Confirmar Nova Senha</label>
+                <input asp-for="ConfirmarNovaSenha" type="password" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Alterar</button>
+        </form>
+    </div>
+</div>

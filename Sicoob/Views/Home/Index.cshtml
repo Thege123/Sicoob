@@ -1,0 +1,139 @@
+﻿@model Sicoob.Models.ViewModels.DashboardViewModel
+
+
+@if (User.Identity!.IsAuthenticated)
+{
+    <div class="alert alert-info">
+        Olá, <strong>@User.Identity.Name</strong>! Perfil: <strong>@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value</strong>
+        <a asp-controller="Account" asp-action="AlterarSenha" class="btn btn-sm btn-outline-secondary ms-3">Alterar Senha</a>
+        <a asp-controller="Account" asp-action="Logout" class="btn btn-sm btn-outline-danger ms-1">Sair</a>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h6 class="card-title">Cartas Administrativas</h6>
+                    <h2>@Model.TotalCA</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h6 class="card-title">Memorandos</h6>
+                    <h2>@Model.TotalMI</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h6 class="card-title">Documentos no Ano</h6>
+                    <h2>@Model.TotalDocumentosNoAno</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-secondary mb-3">
+                <div class="card-body">
+                    <h6 class="card-title">Usuários</h6>
+                    <h2>@Model.TotalUsuarios</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-4 mb-4">
+            <h5>Documentos por Mês</h5>
+            <div style="height: 280px;">
+                <canvas id="graficoMeses"></canvas>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <h5>Cartas x Memorandos</h5>
+            <div style="height: 280px;">
+                <canvas id="graficoTipos"></canvas>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <h5>Documentos por Usuário</h5>
+            <div style="height: 280px;">
+                <canvas id="graficoUsuarios"></canvas>
+            </div>
+        </div>
+    </div>
+
+
+}
+else
+{
+    <a asp-controller="Account" asp-action="Login" class="btn btn-primary mt-4">Fazer Login</a>
+}
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    
+        <script>
+            const mesesLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MesesLabels));
+            const mesesValores = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MesesValores));
+            const usuariosLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.UsuariosLabels));
+            const usuariosValores = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.UsuariosValores));
+
+            new Chart(document.getElementById('graficoMeses'), {
+            type: 'bar',
+            data: {
+            labels: mesesLabels,
+            datasets: [{
+            label: 'Documentos',
+            data: mesesValores,
+            backgroundColor: '#0d6efd',
+            maxBarThickness: 60
+        }]
+        },
+            options: {
+            maintainAspectRatio: false
+        }
+        });
+
+            new Chart(document.getElementById('graficoTipos'), {
+            type: 'doughnut',
+            data: {
+            labels: ['CA', 'MI'],
+            datasets: [{
+            data: [@Model.TotalCA, @Model.TotalMI],
+            backgroundColor: ['#0d6efd', '#198754']
+        }]
+        },
+            options: {
+            maintainAspectRatio: false
+        }
+        });
+
+            new Chart(document.getElementById('graficoUsuarios'), {
+            type: 'bar',
+            data: {
+            labels: usuariosLabels,
+            datasets: [{
+            label: 'Documentos',
+            data: usuariosValores,
+            backgroundColor: '#ffc107',
+                maxBarThickness: 60
+        }]
+        },
+            options: {
+            maintainAspectRatio: false
+        }
+        });
+    </script>
+
+}
+
+

@@ -1,0 +1,59 @@
+@model Sicoob.Models.ViewModels.DocumentosViewModel
+
+@{
+    ViewData["Title"] = "Novo Documento";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <h2>Cadastrar Documento</h2>
+
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="TipoDocumento" class="form-label">Tipo do Documento</label>
+                <select asp-for="TipoDocumento" class="form-select">
+                    <option value="">-- Selecione --</option>
+                    <option value="CA">CA - Carta Administrativa</option>
+                    <option value="MI">MI - Memorando Interno</option>
+                </select>
+                <span asp-validation-for="TipoDocumento" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DataDocumento" class="form-label">Data</label>
+                <input asp-for="DataDocumento" type="date" class="form-control" />
+                <span asp-validation-for="DataDocumento" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Assunto" class="form-label">Assunto</label>
+                <input asp-for="Assunto" class="form-control" />
+                <span asp-validation-for="Assunto" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Destinatario" class="form-label">Destinatário</label>
+                <input asp-for="Destinatario" class="form-control" />
+                <span asp-validation-for="Destinatario" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Setor" class="form-label">Setor / Departamento</label>
+                <input asp-for="Setor" class="form-control" />
+                <span asp-validation-for="Setor" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Descricao" class="form-label">Descrição</label>
+                <textarea asp-for="Descricao" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Descricao" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>

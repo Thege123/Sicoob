@@ -1,0 +1,26 @@
+@{
+    var documentos = ViewBag.Documento as Sicoob.Models.Documento;
+    ViewData["Title"] = "Anexar Arquivo";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <h2>Anexar Arquivo</h2>
+        <p>Documento: <strong>@documentos?.NumeroDocumento</strong> — @documentos?.Assunto</p>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <form asp-action="Anexar" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="documentoId" value="@documentos?.Id" />
+
+            <div class="mb-3">
+                <label class="form-label">Arquivo (PDF, DOCX, PNG, JPG, JPEG)</label>
+                <input type="file" name="arquivo" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Enviar</button>
+            <a asp-controller="Documento" asp-action="Detalhes" asp-route-id="@documentos?.Id" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>

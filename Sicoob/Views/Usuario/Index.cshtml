@@ -1,0 +1,60 @@
+@model List<Sicoob.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Usuários";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+    <h2>Usuários</h2>
+    <a asp-action="Create" class="btn btn-primary">Novo Usuário</a>
+</div>
+
+@if (TempData["Mensagem"] != null)
+{
+    <div class="alert alert-success">@TempData["Mensagem"]</div>
+}
+
+<table class="table table-striped table-hover">
+    <thead>
+    <tr>
+        <th>Nome</th>
+        <th>Usuário</th>
+        <th>E-mail</th>
+        <th>Perfil</th>
+        <th>Status</th>
+        <th>Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var usuario in Model)
+    {
+        <tr>
+            <td>@usuario.Nome</td>
+            <td>@usuario.NomeUsuario</td>
+            <td>@usuario.Email</td>
+            <td>@usuario.Perfil</td>
+            <td>
+                @if (usuario.Ativo)
+                {
+                    <span class="badge bg-success">Ativo</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">Inativo</span>
+                }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@usuario.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+
+                <form asp-action="AlternarStatus" asp-route-id="@usuario.Id" method="post" class="d-inline"
+                      onsubmit="return confirm('Tem certeza?');">
+                    <button type="submit" class="btn btn-sm btn-outline-@(usuario.Ativo ? "danger" : "success")">
+                        @(usuario.Ativo ? "Desativar" : "Ativar")
+                    </button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
